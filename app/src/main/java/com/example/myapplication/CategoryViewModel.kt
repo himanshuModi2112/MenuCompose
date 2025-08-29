@@ -16,15 +16,12 @@ class CategoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _categories = MutableStateFlow<List<Category>>(emptyList())
-    val categories = _categories.asStateFlow()
 
     private val _breadcrumb = MutableStateFlow(listOf("Home"))
     val breadcrumb = _breadcrumb.asStateFlow()
 
     private val _currentSubcategories = MutableStateFlow<List<Any>>(emptyList())
     val currentSubcategories = _currentSubcategories.asStateFlow()
-
-    private var currentLevel: List<Category> = emptyList()
 
     init {
         viewModelScope.launch {
@@ -37,11 +34,6 @@ class CategoryViewModel @Inject constructor(
     fun navigateToCategory(name: String, subList: List<Any>) {
         _breadcrumb.value = _breadcrumb.value + name
         _currentSubcategories.value = subList
-    }
-
-    fun navigateBackTo(level: Int) {
-        _breadcrumb.value = _breadcrumb.value.take(level + 1)
-        _currentSubcategories.value = _categories.value // Simplified reset logic
     }
 
     fun navigateBack() {
