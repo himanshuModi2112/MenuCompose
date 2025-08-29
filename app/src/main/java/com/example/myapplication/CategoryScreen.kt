@@ -1,12 +1,16 @@
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.CategoryViewModel
 import com.example.myapplication.models.Category
@@ -34,7 +38,7 @@ fun CategoryScreen(viewModel: CategoryViewModel) {
 
         // Use grid instead of list
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2), // 2 columns grid
+            columns = GridCells.Fixed(2),
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -45,7 +49,7 @@ fun CategoryScreen(viewModel: CategoryViewModel) {
                     is Category -> CategoryCard(item.name) {
                         viewModel.navigateToCategory(item.name, item.subcategories ?: item.items ?: emptyList())
                     }
-                    is SubCategory -> CategoryCard(item.name) {
+                    is SubCategory -> SubCategoryCard(item.name) {
                         viewModel.navigateToCategory(item.name, item.subcategories ?: item.items ?: emptyList())
                     }
                     is Item -> ItemCard(item.name, item.price)
@@ -60,37 +64,86 @@ fun CategoryCard(name: String, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1f) // make square cards like in PDF
+            .aspectRatio(1f) // square cards
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF4CAF50)) // Green 500
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = androidx.compose.ui.Alignment.Center
+            contentAlignment = Alignment.Center
         ) {
-            Text(text = name, style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = name,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White
+            )
         }
     }
 }
+
+@Composable
+fun SubCategoryCard(name: String, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f)
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF87CEFA)) // Light Sky Blue
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = name,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Black
+            )
+        }
+    }
+}
+
 
 @Composable
 fun ItemCard(name: String, price: Int?) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1f), // square item cards
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            .aspectRatio(1f), // square cards
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEB3B)) // Yellow 500
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(12.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = name, style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = name,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 8.dp),
+                color = Color.Black
+            )
+
             if (price != null) {
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(text = "₹$price", style = MaterialTheme.typography.bodySmall)
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(
+                            color = Color.Black,
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "₹$price",
+                        style = MaterialTheme.typography.bodySmall.copy(color = Color.White)
+                    )
+                }
             }
         }
     }
 }
+
+
